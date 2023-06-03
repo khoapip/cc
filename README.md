@@ -5,7 +5,7 @@ SYMATO CC is a crowd computing project that allows anyone to join and contribute
 To get started, you’ll need to install the symato-contribute script and its dependencies on your local Linux/MacOS or WSL machine. This can be done by running the following command in your terminal:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/telexyz/cc/main/symato-contribute.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/telexyz/cc/main/install.sh | sudo bash
 ```
 
 The script requires sudo permission to install the following tools:
