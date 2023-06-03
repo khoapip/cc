@@ -22,6 +22,7 @@ The script requires sudo permission to install the following tools:
 - Bacalhau Binary: This tool is used for distributed jobs.
 - Docker: This tool provides an isolated execution environment.
 - AWS CLI: This tool is required for quick access to the CommonCrawl data via the S3 protocol, as required by Bacalhau.
+- `jq` and `unzip`: To unzip AWS and extract response from remote server.
 
 ## Start Serving
 Once you have installed the symato-contribute script and its dependencies, you can start serving and contributing to the project by running the following command in your terminal:
