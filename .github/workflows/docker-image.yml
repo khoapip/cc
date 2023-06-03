@@ -22,15 +22,14 @@ jobs:
       if: github.event_name != 'pull_request'
       uses: docker/login-action@v2
       with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
     
     - name: Extract Docker metadata
       id: meta
       uses: docker/metadata-action@v4
       with:
-        images: ghcr.io/telexyz/symato_cc
+        images: symato/cc
 
     # https://github.com/docker/build-push-action
     - name: Build and push Docker image
