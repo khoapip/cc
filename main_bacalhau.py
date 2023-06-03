@@ -108,25 +108,25 @@ def get_token():
     ip_data = ip_response.json()
     ip_address = ip_data['ip']
 
-    # Get Discord handle by IP address
+    # Get HuggingFace Token by Node's IP address
     server_url = f'https://symato.vysma.cloud/webhook/token-by-ip?ip={ip_address}'
     response = requests.get(github_url)
     data = response.json()
     discord_handle = data['discord']
     hf_token = data['hf_token']
-    return hf_token
+    return discord_handle, hf_token
 
 
 def to_huggingface(item, dump_name):
-    token = get_token()
+    discord_handle, token = get_token()
     print('Uploading to huggingface hub...')
     api = HfApi()
     operations = []
 
     description = ''
     
-    path_in_repo = '{}/{}'.format(dump_name,
-                                  os.path.basename(item['file_path']))
+    base_file_name = os.path.basename(item['file_path'])
+    path_in_repo = '{}/{}'.format(dump_name, base_file_name)
     operations.append(
         CommitOperationAdd(
             path_in_repo=path_in_repo,
@@ -139,7 +139,7 @@ def to_huggingface(item, dump_name):
     api.create_commit(
         repo_id='Symato/CC-VI',
         operations=operations,
-        commit_message='Add parquet files to dumps {}'.format(dump_name),
+        commit_message='{} contribute {}/{}'.format(discord_handle, dump_name, base_file_name),
         commit_description=description,
         repo_type='dataset',
         create_pr=True,
