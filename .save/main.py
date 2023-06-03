@@ -4,16 +4,15 @@ import fasttext
 from tqdm import tqdm
 import pypandoc
 import bs4 as bs
-import pandas as pd
+import polars as pl
 import multiprocessing as mp
 import argparse
 import os
+from parfive import Downloader
 from huggingface_hub import HfApi, CommitOperationAdd
-import requests
 
 # disable fasttext warning
 fasttext.FastText.eprint = lambda x: None
-
 # load fasttext model: https://fasttext.cc/docs/en/language-identification.html
 model = fasttext.load_model('./lid.176.bin')
 
@@ -50,10 +49,22 @@ def extract_text(data):
     }
 
 
-def extract_warc(file):
+def download_file(urls_file):
+    urls = open(urls_file, 'r').readlines()
+    print('Total files:', len(urls))
+    urls = ['https://data.commoncrawl.org/' + url.strip() for url in urls]
+    # max_splits: càng lớn thì càng nhanh
+    # max_conn: số file download cùng lúc
+    dl = Downloader(max_splits=20, max_conn=2)
+    for url in urls:
+        dl.enqueue_file(url, path='warc/')
+    result = dl.download()
+    return result
+
+
+def process_warc(file):
     tasks = []
     items = []
-    len_tasks = 0
 
     for record in tqdm(ArchiveIterator(open(file, 'rb'), 
             func_filter=lambda r: r.headers.get('WARC-Identified-Payload-Type') == 'text/html'),
@@ -70,7 +81,6 @@ def extract_warc(file):
             'content': content,
             'headers': headers
         })
-        len_tasks += 1
 
         if len(tasks) == 5 * 1024:
             with mp.Pool(args.num_workers) as p:
@@ -88,53 +98,46 @@ def extract_warc(file):
     output = os.path.join(output_folder, os.path.basename(file).replace('.warc.gz', '.parquet'))
     df.write_parquet(output)
 
-    print("File name: ", file)
-    print("Total pages: ", len_tasks)
-    print("Total Vietnamese pages: ", len(df))
-    print("Output: ", output_parquet)
-    print("====================================")
-    result = {
-        'file_path': output_parquet,
-        'total_page': len_tasks,
-        'vi_page': len(df)
-    }
-    return result
+    return len(tasks)
 
 
-def get_token():
-    print("Retrieving Hugging Face token...")
-    # Get IP address of decentralized node.
-    ip_response = requests.get('https://ifconfig.co/json')
-    ip_data = ip_response.json()
-    ip_address = ip_data['ip']
+def extract_warc(files):
+    results = []
+    for file in files:
+        len_tasks = process_warc(file)
+        results.append({
+            'file_path': output,
+            'total_page': len_tasks,
+            'vi_page': len(df)
+        })
 
-    # Get Discord handle by IP address
-    server_url = f'https://symato.vysma.cloud/webhook/token-by-ip?ip={ip_address}'
-    response = requests.get(github_url)
-    data = response.json()
-    discord_handle = data['discord']
-    hf_token = data['hf_token']
-    return hf_token
+        print("File name: ", file)
+        print("Total pages: ", len_tasks)
+        print("Total Vietnamese pages: ", len(df))
+        print("Output: ", output)
+        print("====================================")
+
+    return results
 
 
-def to_huggingface(item, dump_name):
-    token = get_token()
+def to_huggingface(data, dump_name, token):
     print('Uploading to huggingface hub...')
     api = HfApi()
     operations = []
 
     description = ''
-    
-    path_in_repo = '{}/{}'.format(dump_name,
-                                  os.path.basename(item['file_path']))
-    operations.append(
-        CommitOperationAdd(
-            path_in_repo=path_in_repo,
-            path_or_fileobj=item['file_path'],
+
+    for item in data:
+        path_in_repo = '{}/{}'.format(dump_name,
+                                      os.path.basename(item['file_path']))
+        operations.append(
+            CommitOperationAdd(
+                path_in_repo=path_in_repo,
+                path_or_fileobj=item['file_path'],
+            )
         )
-    )
-    description += "\n- {}: {} vi page out of {} pages".format(
-        path_in_repo, item['vi_page'], item['total_page'])
+        description += "\n- {}: {} vi page out of {} pages".format(
+            path_in_repo, item['vi_page'], item['total_page'])
 
     api.create_commit(
         repo_id='Symato/CC-VI',
@@ -150,16 +153,28 @@ def to_huggingface(item, dump_name):
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--path_file', type=str, help='LIST path of WARC file', required=True)
+    parser.add_argument('--output', type=str, default='parquet', help='Output folder')
+    parser.add_argument('--num_workers', type=int, default=mp.cpu_count())
+    # huggingface token
+    parser.add_argument('--token', type=str, help='Huggingface token')
     parser.add_argument('--dump', type=str, help='Dump name of the warc file belong to', required=True)
-    parser.add_argument('--input_file', type=str, help='HTTP Link Of WARC file', required=True)
-    n_workers = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
-    parser.add_argument('--num_workers', type=int, default=n_workers)
     return parser.parse_args()
 
 
 if __name__ == '__main__':
+    pypandoc.download_pandoc()
+    print('Pandoc version:', pypandoc.get_pandoc_version())
+    print('Trafilatura version:', trafilatura.__version__)
+
     args = parse_args()
-    input_local_file = os.path.join("/inputs", args.input_file)
-    output_parquet = extract_warc(input_local_file)
-    if len(args.token) > 0:
-        to_huggingface(output_parquet, args.dump)
+    output_folder = args.output
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    files = download_file(args.path_file)
+    results = extract_warc(files)
+
+    if len(results) > 0 and args.token:
+        to_huggingface(results, args.dump, args.token)
