@@ -64,7 +64,7 @@ installAWSCLI() {
     if ! command -v docker &> /dev/null; then
         echo "AWS CLI is not installed. Installing Docker now..."
         # Install Unzip
-        sudo apt-get install -y unzip
+        sudo apt-get install -y unzip jq
 
         # Download AWS CLI package
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
