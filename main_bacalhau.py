@@ -55,38 +55,37 @@ def extract_warc(file):
     items = []
     len_tasks = 0
 
-    for record in tqdm(ArchiveIterator(open(file, 'rb'), 
-            func_filter=lambda r: r.headers.get('WARC-Identified-Payload-Type') == 'text/html'),
-            desc=f'Processing {file}'):
+    with mp.Pool(args.num_workers) as p:
+        for record in tqdm(ArchiveIterator(open(file, 'rb'), 
+                func_filter=lambda r: r.headers.get('WARC-Identified-Payload-Type') == 'text/html'),
+                desc=f'Processing {file}'):
 
-        content = record.reader.read()
+            content = record.reader.read()
 
-        headers = {
-            'headers': record.headers.asdict(),
-            'http_headers': record.http_headers.asdict()
-        }
+            headers = {
+                'headers': record.headers.asdict(),
+                'http_headers': record.http_headers.asdict()
+            }
 
-        tasks.append({
-            'content': content,
-            'headers': headers
-        })
-        len_tasks += 1
+            tasks.append({
+                'content': content,
+                'headers': headers
+            })
+            len_tasks += 1
 
-        if len(tasks) == 2 * 1024:
-            with mp.Pool(args.num_workers) as p:
+            if len(tasks) == 3 * 1024:
                 for item in p.imap_unordered(extract_text, tasks):
                     if item is not None: items.append(item)
-            tasks = [] # reset
+                tasks = [] # reset
 
-    # Xử lý chỗ task còn lại
-    with mp.Pool(args.num_workers) as p:
+        # Xử lý chỗ task còn lại
         for item in p.imap_unordered(extract_text, tasks):
             if item is not None: items.append(item)
 
     # Ghi items ra parquet file
     df = pl.DataFrame(items)
-    output = os.path.join(output_folder, os.path.basename(file).replace('.warc.gz', '.parquet'))
-    df.write_parquet(output)
+    output_parquet = os.path.join('/outputs', os.path.basename(file).replace('.warc.gz', '.parquet'))
+    df.to_parquet(output_parquet)
 
     print("File name: ", file)
     print("Total pages: ", len_tasks)
