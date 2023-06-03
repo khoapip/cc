@@ -61,7 +61,7 @@ installDocker() {
 }
 
 installAWSCLI() {
-    if ! command -v docker &> /dev/null; then
+    if ! command -v aws &> /dev/null; then
         echo "AWS CLI is not installed. Installing Docker now..."
         # Install Unzip
         sudo apt-get install -y unzip jq
