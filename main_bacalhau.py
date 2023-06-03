@@ -72,7 +72,7 @@ def extract_warc(file):
         })
         len_tasks += 1
 
-        if len(tasks) == 5 * 1024:
+        if len(tasks) == 2 * 1024:
             with mp.Pool(args.num_workers) as p:
                 for item in p.imap_unordered(extract_text, tasks):
                     if item is not None: items.append(item)
