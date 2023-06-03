@@ -1,6 +1,15 @@
 # SYMATO CC
 SYMATO CC is a crowd computing project that allows anyone to join and contribute to the preprocessing of Vietnamese Common Crawl data. By using our symato-contribute script, you can easily set up your local machine to start serving and contributing to the project.
 
+## Requisition
+
+Before getting started, make sure you have the following:
+
+- A HuggingFace account for Pull Request submission.
+- AWS Access Key & Secret Key for reading CommonCrawl repo, this is free to create (contact Symato if you don't have one).
+- PEER_ADDR and SWARM_ADDR: register your contribution with Symato in Discord.
+- A PC/Laptop/VPS/Server that meets the minimum hardware requirements: at least 2 vCPUs, 2GB of RAM, and a stable internet connection.
+
 ## Get Started
 To get started, you’ll need to install the symato-contribute script and its dependencies on your local Linux/MacOS or WSL machine. This can be done by running the following command in your terminal:
 
