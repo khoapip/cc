@@ -31,6 +31,8 @@ Once you have installed the symato-contribute script and its dependencies, you c
 symato-contribute
 ```
 
+You will need to enter Huggingface Token, find it at https://huggingface.co/settings/tokens
+
 This will start the SYMATO CC crowd computing process on your local machine. You can now contribute to the preprocessing of Vietnamese Common Crawl data.
 
 Thank you for joining and contributing to SYMATO CC!
