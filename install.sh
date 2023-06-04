@@ -47,7 +47,7 @@ installDocker() {
         curl -fsSL https://get.docker.com -o get-docker.sh
         sudo sh get-docker.sh
         
-        sudo usermod -aG docker $USER
+        # sudo usermod -aG docker $USER
         
         echo "Please logout and relogin or restart your machine before serving with Symato!"
 
