@@ -8,4 +8,6 @@ RUN pip install -r requirements.txt
 
 WORKDIR /app
 
+RUN wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin -o /app/lid.176.bin
+
 COPY . .
