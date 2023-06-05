@@ -21,24 +21,6 @@ BACALHAU_CLI_FILENAME=bacalhau
 
 BACALHAU_CLI_FILE="${BACALHAU_INSTALL_DIR}/${BACALHAU_CLI_FILENAME}"
 
-BACALHAU_PUBLIC_KEY=$(cat <<-END
------BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA7bXxrECk3tQfKox7MDaN
-OAQ+NATnILQ9XFfYHs+4Q04lK1tHpvUEwm9OwidMJKlr+M1f/9rzLYV6RDrv0FuA
-xaxGS6xrYwmLiXhDj4KwU3v5e6lHhzupsj+7LNSZ9g+ppCXcw73l5wtNmFojKQDH
-vpKDzB2KKqRq7/TRenNwvMD02zuDcjGdgXSeSiyIZ6jCn9Y6pX7nPF4rOxpFSL/w
-oSb5q5tVY3ZqyrNx/Bk9mBoX3a8xDqFtthuC6SjIF1t5arLih2yEpq8hOdGyyX1l
-uQCYlYuIwsYZL+fj2fFzhqpmrHBB97Npw1bTjnzQ8HQIsxkrMEg9ePFfcRfWw7w6
-nWBLD4JOTFOoi9SPB0BdyqvE8B+6FTlT8XbK7/VtheR4yFVHvrnVkGzIm6AnwINc
-9yFlS5FbxHh0vzL5G4jTYVZrZ7YaQ/zxgZ/SHE9fcSZv4l+W2vlo1EivtOgy1Ee6
-OfDFMvdHyg04qjOGxUzYDxZ4/AL+ywSm1HDXP93Oi8icKXy5OANogW4XZ5hll54g
-4EBqSON/HH4eIvyWTfFG+U6DBtD0Qn4gZO9y1KUNbhDQ0Z6LOC/mKgWhPSKRdFJk
-L9lmeqYFIvAnBx5rmyE7Hlzqk4pSRfggra0D2ydTV79tUQGlX5wpkwch/s4nRmZb
-rZd9rvTsifOjf2jxGGu5N6ECAwEAAQ==
------END PUBLIC KEY-----
-END
-)
-
 installDocker() {
     # Check if Docker is installed
     if ! command -v docker &> /dev/null; then
@@ -219,20 +201,6 @@ downloadFile() {
 
 }
 
-verifyTarBall() {
-    # echo "ROOT: $BACALHAU_TMP_ROOT"
-    # echo "Public Key: $BACALHAU_PUBLIC_KEY"
-    echo "$BACALHAU_PUBLIC_KEY" > "$BACALHAU_TMP_ROOT/BACALHAU_public_file.pem"
-    openssl base64 -d -in "$SIG_TMP_FILE" -out "$SIG_TMP_FILE".decoded
-    if openssl dgst -sha256 -verify "$BACALHAU_TMP_ROOT/BACALHAU_public_file.pem" -signature "$SIG_TMP_FILE".decoded "$CLI_TMP_FILE" ; then
-        # Above command echos "Verified Ok"
-        return
-    else
-        echo "Failed to verify signature of tarball."
-        exit 1
-    fi
-}
-
 expandTarball() {
     echo "Extracting tarball ..."
     # echo "Extract tar file - $CLI_TMP_FILE to $BACALHAU_TMP_ROOT"
@@ -351,9 +319,7 @@ setup_tmp
 installAWSCLI
 installDocker
 downloadFile "$ret_val"
-# verifyTarBall
 expandTarball
-verifyBin
 installFile
 install_symato_contribute
 cleanup
