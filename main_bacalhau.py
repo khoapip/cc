@@ -159,5 +159,4 @@ if __name__ == '__main__':
     args = parse_args()
     input_local_file = os.path.join("/inputs", args.input_file)
     output_parquet = extract_warc(input_local_file)
-    if len(args.token) > 0:
-        to_huggingface(output_parquet, args.dump)
+    to_huggingface(output_parquet, args.dump)
