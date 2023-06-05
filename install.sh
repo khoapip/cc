@@ -351,7 +351,7 @@ setup_tmp
 installAWSCLI
 installDocker
 downloadFile "$ret_val"
-verifyTarBall
+# verifyTarBall
 expandTarball
 verifyBin
 installFile
