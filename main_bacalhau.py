@@ -31,7 +31,7 @@ def extract_text(data):
     soup = bs.BeautifulSoup(content, 'lxml')
 
     soup = soup.find('main')
-    if not soup: soup = bs.BeautifulSoup(content, 'lxml').find('body')
+    if not soup: soup = bs.BeautifulSoup(content, 'lxml')
 
     for tag in ['header', 'footer', 'script', 'style']:
         for div in soup.find_all(tag):
