@@ -109,7 +109,7 @@ def get_token():
     return discord_handle, hf_token
 
 
-def to_huggingface(item, dump_name):
+def to_huggingface(repo_id = "Symato/cc", item, dump_name):
     discord_handle, token = get_token()
     print('Uploading to huggingface hub...')
     api = HfApi()
@@ -131,7 +131,7 @@ def to_huggingface(item, dump_name):
         path_in_repo, item['vi_page'], item['total_page'])
 
     api.create_commit(
-        repo_id='Symato/CC-VI',
+        repo_id=repo_id,
         operations=operations,
         commit_message='{} submit {}'.format(discord_handle, path_in_repo),
         commit_description=description,
@@ -146,6 +146,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dump', type=str, help='Dump name of the warc file belong to', required=True)
     parser.add_argument('--input_file', type=str, help='HTTP Link Of WARC file', required=True)
+    parser.add_argument('--repo_id', type=str, help='Repo to create PR', required=True)
     n_workers = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
     parser.add_argument('--num_workers', type=int, default=n_workers)
     return parser.parse_args()
@@ -155,4 +156,4 @@ if __name__ == '__main__':
     args = parse_args()
     input_local_file = os.path.join("/inputs", args.input_file)
     output_parquet = extract_warc(input_local_file)
-    to_huggingface(output_parquet, args.dump)
+    to_huggingface(args.repo_id, output_parquet, args.dump)
