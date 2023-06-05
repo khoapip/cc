@@ -13,8 +13,8 @@
 BACALHAU_HTTP_REQUEST_CLI=curl
 
 # GitHub Organization and repo name to download release
-GITHUB_ORG=bacalhau-project
-GITHUB_REPO=bacalhau
+GITHUB_ORG=telexyz
+GITHUB_REPO=cc
 
 # BACALHAU CLI filename
 BACALHAU_CLI_FILENAME=bacalhau
