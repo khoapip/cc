@@ -165,15 +165,12 @@ downloadFile() {
     LATEST_RELEASE_TAG=$1
 
     BACALHAU_CLI_ARTIFACT="${BACALHAU_CLI_FILENAME}_${LATEST_RELEASE_TAG}_${OS}_${ARCH}.tar.gz"
-    BACALHAU_SIG_ARTIFACT="${BACALHAU_CLI_ARTIFACT}.signature.sha256"
 
     DOWNLOAD_BASE="https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/releases/download"
 
     CLI_DOWNLOAD_URL="${DOWNLOAD_BASE}/${LATEST_RELEASE_TAG}/${BACALHAU_CLI_ARTIFACT}"
-    SIG_DOWNLOAD_URL="${DOWNLOAD_BASE}/${LATEST_RELEASE_TAG}/${BACALHAU_SIG_ARTIFACT}"
 
     CLI_TMP_FILE="$BACALHAU_TMP_ROOT/$BACALHAU_CLI_ARTIFACT"
-    SIG_TMP_FILE="$BACALHAU_TMP_ROOT/$BACALHAU_SIG_ARTIFACT"
 
     echo "Downloading $CLI_DOWNLOAD_URL ..."
     if [ "$BACALHAU_HTTP_REQUEST_CLI" == "curl" ]; then
@@ -184,18 +181,6 @@ downloadFile() {
 
     if [ ! -f "$CLI_TMP_FILE" ]; then
         echo "failed to download $CLI_DOWNLOAD_URL ..."
-        exit 1
-    fi
-
-    echo "Downloading sig file $SIG_DOWNLOAD_URL ..."
-    if [ "$BACALHAU_HTTP_REQUEST_CLI" == "curl" ]; then
-        curl -SsLN "$SIG_DOWNLOAD_URL" -o "$SIG_TMP_FILE"
-    else
-        wget -q -O "$SIG_TMP_FILE" "$SIG_DOWNLOAD_URL"
-    fi
-
-    if [ ! -f "$SIG_TMP_FILE" ]; then
-        echo "failed to download $SIG_DOWNLOAD_URL ..."
         exit 1
     fi
 
