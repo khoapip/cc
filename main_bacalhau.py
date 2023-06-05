@@ -3,7 +3,7 @@ from fastwarc.warc import ArchiveIterator
 import fasttext
 import pypandoc
 import bs4 as bs
-import pandas as pd
+import polars as pl
 import multiprocessing as mp
 import argparse
 import os
