@@ -82,7 +82,7 @@ def extract_warc(file):
     # Ghi items ra parquet file
     df = pl.DataFrame(items)
     output_parquet = os.path.join('/outputs', os.path.basename(file).replace('.warc.gz', '.parquet'))
-    df.to_parquet(output_parquet)
+    df.write_parquet(output_parquet)
 
     print("File name: ", file)
     print("Total pages: ", len_tasks)
