@@ -1,7 +1,6 @@
 import trafilatura
 from fastwarc.warc import ArchiveIterator
 import fasttext
-from tqdm import tqdm
 import pypandoc
 import bs4 as bs
 import pandas as pd
@@ -56,9 +55,7 @@ def extract_warc(file):
     len_tasks = 0
 
     with mp.Pool(args.num_workers) as p:
-        for record in tqdm(ArchiveIterator(open(file, 'rb'), 
-                func_filter=lambda r: r.headers.get('WARC-Identified-Payload-Type') == 'text/html'),
-                desc=f'Processing {file}'):
+        for record in ArchiveIterator(open(file, 'rb'), func_filter=lambda r: r.headers.get('WARC-Identified-Payload-Type') == 'text/html'):
 
             content = record.reader.read()
 
@@ -124,8 +121,10 @@ def to_huggingface(item, dump_name):
 
     description = ''
     
-    base_file_name = os.path.basename(item['file_path'])
-    path_in_repo = '{}/{}'.format(dump_name, base_file_name)
+    segment_name = os.path.basename(item['file_path']).split("-")
+    file_name = segment_name[-1]
+    segment_name = "-".join(segment_name[:-1])
+    path_in_repo = '{}/{}/{}'.format(dump_name, segment_name, file_name)
     operations.append(
         CommitOperationAdd(
             path_in_repo=path_in_repo,
@@ -138,7 +137,7 @@ def to_huggingface(item, dump_name):
     api.create_commit(
         repo_id='Symato/CC-VI',
         operations=operations,
-        commit_message='{} contribute {}/{}'.format(discord_handle, dump_name, base_file_name),
+        commit_message='{} submit {}'.format(discord_handle, path_in_repo),
         commit_description=description,
         repo_type='dataset',
         create_pr=True,
