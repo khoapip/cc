@@ -109,7 +109,7 @@ def get_token():
     return discord_handle, hf_token
 
 
-def to_huggingface(repo_id = "Symato/cc", item, dump_name):
+def to_huggingface(repo_id, item, dump_name):
     discord_handle, token = get_token()
     print('Uploading to huggingface hub...')
     api = HfApi()
