@@ -99,14 +99,10 @@ def extract_warc(file):
 
 def get_token():
     print("Retrieving Hugging Face token...")
-    # Get IP address of decentralized node.
-    ip_response = requests.get('https://ifconfig.co/json')
-    ip_data = ip_response.json()
-    ip_address = ip_data['ip']
 
     # Get HuggingFace Token by Node's IP address
-    server_url = f'https://symato.vysma.cloud/webhook/token-by-ip?ip={ip_address}'
-    response = requests.get(github_url)
+    server_url = f'https://symato.vysma.cloud/webhook/token-by-ip'
+    response = requests.get(server_url)
     data = response.json()
     discord_handle = data['discord']
     hf_token = data['hf_token']
