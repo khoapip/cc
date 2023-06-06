@@ -14,7 +14,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-
+# run this code to merge all the PR based author username
 # example run: python .\PR-manager.py --token yourtoken --repo_id Symato/cc --authors khunglong robot ninja
 if __name__ == '__main__':
     args = parse_args()
