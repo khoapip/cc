@@ -51,27 +51,24 @@ fi
 
 if [ -z "$AWS_ACCESS_KEY_ID" ]; then
     read -p "Enter your AWS Access Key for S3 fast download: " AWS_ACCESS_KEY_ID
-    echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $CONFIG_FILE
+    echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $CONFIG_FILE
 fi
 
 if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
     read -p "Enter your AWS Secret Key: " AWS_SECRET_ACCESS_KEY
-    echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $CONFIG_FILE
+    echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $CONFIG_FILE
 fi
-
-# Get IP address
-ip_address=$(curl -s https://ifconfig.co/json | jq -r '.ip')
 
 # Get Linux distribution information
 distro=$(lsb_release -ds)
 
-curl -X POST -d "ip=$ip_address&discord=$DISCORD_USERNAME&hf_token=$HF_TOKEN&memory=$MEM&cpu=$CPU&distro=$distro" https://symato.vysma.cloud/webhook/online
+curl -X POST -d "discord=$DISCORD_USERNAME&hf_token=$HF_TOKEN&memory=$MEM&cpu=$CPU&distro=$distro" https://symato.vysma.cloud/webhook/online
 
 bacalhau serve --node-type compute \
-    --private-internal-ipfs --peer $PEER_ADDR  \
-    --ipfs-swarm-addr $SWARM_ADDR \
-    --limit-job-cpu $CPU \
-    --limit-job-memory $MEM \
-    --limit-total-cpu $CPU \
-    --limit-job-memory $MEM \
+    --private-internal-ipfs --peer "${PEER_ADDR}"  \
+    --ipfs-swarm-addr "${SWARM_ADDR}" \
+    --limit-job-cpu "${CPU}" \
+    --limit-job-memory "${MEM}" \
+    --limit-total-cpu "${CPU}" \
+    --limit-job-memory "${MEM}" \
     --job-selection-accept-networked
