@@ -164,7 +164,7 @@ setup_tmp() {
 downloadFile() {
     LATEST_RELEASE_TAG=$1
 
-    BACALHAU_CLI_ARTIFACT="${BACALHAU_CLI_FILENAME}_${LATEST_RELEASE_TAG}_${OS}_${ARCH}.tar.gz"
+    BACALHAU_CLI_ARTIFACT="${BACALHAU_CLI_FILENAME}_${LATEST_RELEASE_TAG}_${OS}_${ARCH}"
 
     DOWNLOAD_BASE="https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/releases/download"
 
@@ -182,8 +182,10 @@ downloadFile() {
     if [ ! -f "$CLI_TMP_FILE" ]; then
         echo "failed to download $CLI_DOWNLOAD_URL ..."
         exit 1
+    else
+        sudo chmod +x "$CLI_TMP_FILE"
+        sudo mv "$CLI_TMP_FILE" "$BACALHAU_INSTALL_DIR"
     fi
-
 }
 
 expandTarball() {
@@ -191,18 +193,6 @@ expandTarball() {
     # echo "Extract tar file - $CLI_TMP_FILE to $BACALHAU_TMP_ROOT"
     tar xzf "$CLI_TMP_FILE" -C "$BACALHAU_TMP_ROOT"
 }
-
-verifyBin() {
-    # openssl base64 -d -in $BACALHAU_TMP_ROOT/bacalhau.signature.sha256 -out $BACALHAU_TMP_ROOT/bacalhau.signature.sha256.decoded
-    # if openssl dgst -sha256 -verify "$BACALHAU_TMP_ROOT/BACALHAU_public_file.pem" -signature $BACALHAU_TMP_ROOT/bacalhau.signature.sha256.decoded $BACALHAU_TMP_ROOT/bacalhau; then
-    #     return
-    # else
-    #     echo "Failed to verify signature of bacalhau binary."
-    #     exit 1
-    # fi
-    echo "NOT verifying Bin"
-}
-
 
 installFile() {
     local tmp_root_bacalhau_cli="$BACALHAU_TMP_ROOT/$BACALHAU_CLI_FILENAME"
@@ -304,9 +294,6 @@ setup_tmp
 installAWSCLI
 installDocker
 downloadFile "$ret_val"
-expandTarball
-installFile
 install_symato_contribute
 cleanup
-
 installCompleted
