@@ -22,15 +22,18 @@ def extract_text(data):
     headers = data['headers']
 
     text = trafilatura.extract(content)
-    if text is None: return None
+    if text is None:
+        return None
 
     lang = model.predict(text.replace('\n', '. '))[0][0].split('__')[-1]
-    if lang != 'vi': return None
+    if lang != 'vi':
+        return None
 
     soup = bs.BeautifulSoup(content, 'lxml')
 
     soup = soup.find('main')
-    if not soup: soup = bs.BeautifulSoup(content, 'lxml')
+    if not soup:
+        soup = bs.BeautifulSoup(content, 'lxml')
 
     for tag in ['header', 'footer', 'script', 'style']:
         for div in soup.find_all(tag):
@@ -38,8 +41,8 @@ def extract_text(data):
 
     html_string = soup.prettify()
 
-    markdown = pypandoc.convert_text( \
-        html_string, to="gfm+hard_line_breaks-raw_html", \
+    markdown = pypandoc.convert_text(
+        html_string, to="gfm+hard_line_breaks-raw_html",
         format='html', extra_args=['--quiet'])
 
     return {
@@ -72,16 +75,19 @@ def extract_warc(file):
 
             if len(tasks) == 3 * 1024:
                 for item in p.imap_unordered(extract_text, tasks):
-                    if item is not None: items.append(item)
-                tasks = [] # reset
+                    if item is not None:
+                        items.append(item)
+                tasks = []  # reset
 
         # Xử lý chỗ task còn lại
         for item in p.imap_unordered(extract_text, tasks):
-            if item is not None: items.append(item)
+            if item is not None:
+                items.append(item)
 
     # Ghi items ra parquet file
     df = pl.DataFrame(items)
-    output_parquet = os.path.join('/outputs', os.path.basename(file).replace('.warc.gz', '.parquet'))
+    output_parquet = os.path.join(
+        '/outputs', os.path.basename(file).replace('.warc.gz', '.parquet'))
     df.write_parquet(output_parquet)
 
     print("File name: ", file)
@@ -116,7 +122,7 @@ def to_huggingface(repo_id, item, dump_name):
     operations = []
 
     description = ''
-    
+
     segment_name = os.path.basename(item['file_path']).split("-")
     file_name = segment_name[-1]
     segment_name = "-".join(segment_name[:-1])
@@ -129,24 +135,39 @@ def to_huggingface(repo_id, item, dump_name):
     )
     description += "\n- {}: {} vi page out of {} pages".format(
         path_in_repo, item['vi_page'], item['total_page'])
-
-    api.create_commit(
-        repo_id=repo_id,
-        operations=operations,
-        commit_message='{} submit {}'.format(discord_handle, path_in_repo),
-        commit_description=description,
-        repo_type='dataset',
-        create_pr=True,
-        token=token
-    )
+    try:
+        api.create_commit(
+            repo_id=repo_id,
+            operations=operations,
+            commit_message='{} submit {}'.format(discord_handle, path_in_repo),
+            commit_description=description,
+            repo_type='dataset',
+            create_pr=False,
+            token=token
+        )
+    except Exception as e:
+        # if cant push direct, make a PR
+        print(e)
+        api.create_commit(
+            repo_id=repo_id,
+            operations=operations,
+            commit_message='{} submit {}'.format(discord_handle, path_in_repo),
+            commit_description=description,
+            repo_type='dataset',
+            create_pr=True,
+            token=token
+        )
     print('Done!')
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dump', type=str, help='Dump name of the warc file belong to', required=True)
-    parser.add_argument('--input_file', type=str, help='HTTP Link Of WARC file', required=True)
-    parser.add_argument('--repo_id', type=str, help='Repo to create PR', required=True)
+    parser.add_argument(
+        '--dump', type=str, help='Dump name of the warc file belong to', required=True)
+    parser.add_argument('--input_file', type=str,
+                        help='HTTP Link Of WARC file', required=True)
+    parser.add_argument('--repo_id', type=str,
+                        help='Repo to create PR', required=True)
     n_workers = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
     parser.add_argument('--num_workers', type=int, default=n_workers)
     return parser.parse_args()
