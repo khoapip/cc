@@ -71,7 +71,7 @@ install_symato_contribute() {
     echo "Install symato-contribute completed!"
 }
 
-installCompleted() {
+install_completed() {
     echo "  #####  #     # #     #    #    ####### ####### "
     echo " #     #  #   #  ##   ##   # #      #    #     # "
     echo " #         # #   # # # #  #   #     #    #     # "
@@ -92,4 +92,5 @@ trap "fail_trap" EXIT
 install_aws_cli
 install_docker
 install_bacalhau
-installCompleted
+install_symato_contribute
+install_completed
