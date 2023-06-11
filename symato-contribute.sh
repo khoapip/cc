@@ -49,16 +49,6 @@ if [ -z "$MEM" ]; then
     echo "MEM=$MEM" >> $CONFIG_FILE
 fi
 
-if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-    read -p "Enter your AWS Access Key for S3 fast download: " AWS_ACCESS_KEY_ID
-    echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $CONFIG_FILE
-fi
-
-if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-    read -p "Enter your AWS Secret Key: " AWS_SECRET_ACCESS_KEY
-    echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $CONFIG_FILE
-fi
-
 # Get Linux distribution information
 distro=$(lsb_release -ds)
 
