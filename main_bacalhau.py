@@ -3,7 +3,7 @@ from fastwarc.warc import ArchiveIterator
 import fasttext
 import pypandoc
 import bs4 as bs
-import polars as pl
+import pandas as pd
 import multiprocessing as mp
 import argparse
 import os
@@ -86,10 +86,10 @@ def extract_warc(file):
                 items.append(item)
 
     # Ghi items ra parquet file
-    df = pl.DataFrame(items)
+    df = pd.DataFrame(items)
     output_parquet = os.path.join(
         '/outputs', os.path.basename(file).replace('.warc.gz', '.parquet'))
-    df.write_parquet(output_parquet)
+    df.to_parquet(output_parquet)
 
     print("File name: ", file)
     print("Total pages: ", len_tasks)
