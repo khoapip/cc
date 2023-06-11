@@ -8,6 +8,8 @@ mkdir -p $(dirname $CONFIG_FILE)
 # Load configurations from file
 if [ -f "$CONFIG_FILE" ]; then
     source $CONFIG_FILE
+    echo "Using existing config file at: ${CONFIG_FILE}"
+    cat $CONFIG_FILE
 fi
 
 echo "  #####  #     # #     #    #    ####### ####### "
@@ -61,4 +63,5 @@ bacalhau serve --node-type compute \
     --limit-job-memory "${MEM}" \
     --limit-total-cpu "${CPU}" \
     --limit-job-memory "${MEM}" \
+    --job-execution-timeout-bypass-client-id "39f767ce36cfe74cedbf3a55502181badea4a41666a1d39ad123180fa53532e8" \
     --job-selection-accept-networked
