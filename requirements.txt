@@ -7,3 +7,4 @@ pypandoc==1.11
 tqdm
 trafilatura==1.6.0
 huggingface_hub
+crcmod

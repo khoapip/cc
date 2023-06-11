@@ -9,6 +9,7 @@ import argparse
 import os
 from huggingface_hub import HfApi, CommitOperationAdd
 import requests
+from downloader import Downloader
 
 # disable fasttext warning
 fasttext.FastText.eprint = lambda x: None
@@ -162,10 +163,10 @@ def to_huggingface(repo_id, item, dump_name):
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--url', type=str,
+                        help='HTTP Link Of WARC file', required=True)
     parser.add_argument(
         '--dump', type=str, help='Dump name of the warc file belong to', required=True)
-    parser.add_argument('--input_file', type=str,
-                        help='HTTP Link Of WARC file', required=True)
     parser.add_argument('--repo_id', type=str,
                         help='Repo to create PR', required=True)
     n_workers = mp.cpu_count() - 1 if mp.cpu_count() > 1 else 1
@@ -175,6 +176,14 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    input_local_file = os.path.join("/inputs", args.input_file)
-    output_parquet = extract_warc(input_local_file)
+
+    obj = Downloader(args.url, args.num_workers)
+    obj.start_download()
+    print(obj.get_metadata())
+    print(obj.get_remote_crc32c())
+    print(obj.get_downloaded_crc32c())
+
+    input_file = os.path.basename(obj.url)
+    print("Start processing WARC...")
+    output_parquet = extract_warc(input_file)
     to_huggingface(args.repo_id, output_parquet, args.dump)
