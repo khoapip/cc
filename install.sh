@@ -29,29 +29,6 @@ install_bacalhau() {
     curl -sL https://get.bacalhau.org/install.sh | bash
 }
 
-install_aws_cli() {
-    if ! command -v aws &> /dev/null; then
-        echo "AWS CLI is not installed. Installing Docker now..."
-        # Install Unzip
-        sudo apt-get install -y unzip jq
-
-        # Download AWS CLI package
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-
-        # Unzip the package
-        unzip awscliv2.zip
-
-        # Install AWS CLI
-        sudo ./aws/install --update -i /usr/local/aws-cli -b $BACALHAU_INSTALL_DIR
-
-        # Clean up downloaded zip file
-        rm awscliv2.zip
-        rm -rf ./aws
-     else
-         echo "AWS CLI is already installed!"
-     fi
-}
-
 install_symato_contribute() {
     # Set the URL of the remote script on GitHub
     github_script_url="https://raw.githubusercontent.com/telexyz/cc/main/symato-contribute.sh"
@@ -88,7 +65,6 @@ install_completed() {
 # main
 # -----------------------------------------------------------------------------
 
-install_aws_cli
 install_docker
 install_bacalhau
 install_symato_contribute
