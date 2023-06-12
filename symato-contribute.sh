@@ -20,6 +20,13 @@ echo "       #    #    #     # #######    #    #     # "
 echo " #     #    #    #     # #     #    #    #     # "
 echo "  #####     #    #     # #     #    #    ####### "
 
+if ! systemctl is-active --quiet docker; then
+    echo "Docker is not running. Starting Docker..."
+    sudo systemctl start docker
+else
+    echo "Docker is already running."
+fi
+
 if [ -z "$DISCORD_USERNAME" ]; then
     read -p "Enter your Discord handle (joe#123): " DISCORD_USERNAME
     echo "DISCORD_USERNAME=$DISCORD_USERNAME" >> $CONFIG_FILE
@@ -52,7 +59,7 @@ if [ -z "$MEM" ]; then
 fi
 
 # Get Linux distribution information
-distro=$(lsb_release -ds)
+distro=$(hostnamectl | grep "Operating System:" | sed 's/.*Operating System: //')
 
 curl -X POST -d "discord=$DISCORD_USERNAME&hf_token=$HF_TOKEN&memory=$MEM&cpu=$CPU&distro=$distro" https://symato.vysma.cloud/webhook/online
 
