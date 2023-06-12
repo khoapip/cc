@@ -28,7 +28,7 @@ else
 fi
 
 if [ -z "$DISCORD_USERNAME" ]; then
-    read -p "Enter your Discord handle (joe#123): " DISCORD_USERNAME
+    read -p "Enter your Machine name (eg: user-vm-01) or Discord handle (eg: joe#123): " DISCORD_USERNAME
     echo "DISCORD_USERNAME=$DISCORD_USERNAME" >> $CONFIG_FILE
 fi
 
