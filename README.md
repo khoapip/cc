@@ -28,7 +28,8 @@ The script requires sudo permission to install the following tools:
 Once you have installed the symato-contribute script and its dependencies, you can start serving and contributing to the project by running the following command in your terminal:
 
 ```bash
-symato-contribute
+sudo symato-contribute
+# we need sudo permission inorder to make script run correctly. And sometime the script use most of CPUs to process text.
 ```
 
 You will need to enter Huggingface Token, find it at https://huggingface.co/settings/tokens
