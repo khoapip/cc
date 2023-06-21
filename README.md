@@ -36,4 +36,7 @@ You will need to enter Huggingface Token, find it at https://huggingface.co/sett
 
 This will start the SYMATO CC crowd computing process on your local machine. You can now contribute to the preprocessing of Vietnamese Common Crawl data.
 
+## Gathered data
+huggingface.co/datasets/Symato/cc/viewer/Symato--cc
+
 Thank you for joining and contributing to SYMATO CC!
