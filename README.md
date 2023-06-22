@@ -32,6 +32,18 @@ sudo symato-contribute
 # we need sudo permission inorder to make script run correctly. And sometime the script use most of CPUs to process text.
 ```
 
+Sample config:
+```
+DISCORD_USERNAME=xxx
+HF_TOKEN=hf_....
+PEER_ADDR=/ip4/103.153.73.18/tcp/1235/p2p/QmSXnt5YWdvvTyTbzUKX3bVkNAXfY1u5a2dRtXuP44fjEF
+SWARM_ADDR=/ip4/103.153.73.18/tcp/4001/p2p/QmbgtvLTaGYE4j4QGu7UgRhzffCq6YWQ7e7Xkc3QqWhtSt
+CPU=8
+MEM=8Gb
+AWS_ACCESS_KEY_ID=AKIAZIR47HG5J5CJCXXK
+AWS_SECRET_ACCESS_KEY=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
+```
+
 You will need to enter Huggingface Token, find it at https://huggingface.co/settings/tokens
 
 This will start the SYMATO CC crowd computing process on your local machine. You can now contribute to the preprocessing of Vietnamese Common Crawl data.
