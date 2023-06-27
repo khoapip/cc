@@ -88,7 +88,7 @@ def extract_warc(file):
     # Ghi items ra parquet file
     df = pd.DataFrame(items)
     output_parquet = os.path.join(
-        '/outputs', os.path.basename(file).replace('.warc.gz', '.parquet'))
+        '/tmp', os.path.basename(file).replace('.warc.gz', '.parquet'))
     df.to_parquet(output_parquet)
 
     print("File name: ", file)
