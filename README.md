@@ -40,8 +40,8 @@ PEER_ADDR=/ip4/103.153.73.18/tcp/1235/p2p/QmSXnt5YWdvvTyTbzUKX3bVkNAXfY1u5a2dRtX
 SWARM_ADDR=/ip4/103.153.73.18/tcp/4001/p2p/QmbgtvLTaGYE4j4QGu7UgRhzffCq6YWQ7e7Xkc3QqWhtSt
 CPU=8
 MEM=8Gb
-AWS_ACCESS_KEY_ID=AKIAZIR47HG5J5CJCXXK
-AWS_SECRET_ACCESS_KEY=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
+AWS_ACCESS_KEY_ID=<BỎ-QUA>
+AWS_SECRET_ACCESS_KEY=<BỎ-QUA>
 ```
 
 You will need to enter Huggingface Token, find it at https://huggingface.co/settings/tokens
