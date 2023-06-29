@@ -6,7 +6,6 @@ SYMATO CC is a crowd computing project that allows anyone to join and contribute
 Before getting started, make sure you have the following:
 
 - A HuggingFace account for Pull Request submission.
-- AWS Access Key & Secret Key for reading CommonCrawl repo, this is free to create (contact Symato if you don't have one).
 - PEER_ADDR and SWARM_ADDR: register your contribution with Symato in Discord.
 - A PC/Laptop/VPS/Server that meets the minimum hardware requirements: at least 2 vCPUs, 2GB of RAM, and a stable internet connection.
 
@@ -40,8 +39,6 @@ PEER_ADDR=/ip4/103.153.73.18/tcp/1235/p2p/QmSXnt5YWdvvTyTbzUKX3bVkNAXfY1u5a2dRtX
 SWARM_ADDR=/ip4/103.153.73.18/tcp/4001/p2p/QmbgtvLTaGYE4j4QGu7UgRhzffCq6YWQ7e7Xkc3QqWhtSt
 CPU=8
 MEM=8Gb
-AWS_ACCESS_KEY_ID=<BỎ-QUA>
-AWS_SECRET_ACCESS_KEY=<BỎ-QUA>
 ```
 
 You will need to enter Huggingface Token, find it at https://huggingface.co/settings/tokens
