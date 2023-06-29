@@ -9,10 +9,11 @@ BASE_JOB_URL=https://job-server.com
 while true; do
     # Wait for a free slot
     while [ "$(jobs -r | wc -l)" -ge "${n_jobs}" ]; do
-        sleep 45
+        sleep 5
     done
 
     # Get the next job
+    sleep 30
     echo "========================="
     echo "Requesting for new job..."
     job=$(curl -sS "${BASE_JOB_URL}/get-job")
