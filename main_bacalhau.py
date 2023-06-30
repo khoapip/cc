@@ -143,21 +143,12 @@ def to_huggingface(repo_id, item, dump_name):
             commit_message='{} submit {}'.format(discord_handle, path_in_repo),
             commit_description=description,
             repo_type='dataset',
-            create_pr=False,
+            create_pr=True,
             token=token
         )
     except Exception as e:
         # if cant push direct, make a PR
         print(e)
-        api.create_commit(
-            repo_id=repo_id,
-            operations=operations,
-            commit_message='{} submit {}'.format(discord_handle, path_in_repo),
-            commit_description=description,
-            repo_type='dataset',
-            create_pr=True,
-            token=token
-        )
     print('Done!')
 
 
