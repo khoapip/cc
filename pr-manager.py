@@ -47,11 +47,11 @@ if __name__ == '__main__':
             if discuss.author in count_by_authors and count_by_authors[discuss.author] >= 5: # Github Actions might timeout, limit per user
                 continue
             else:
-                # api.merge_pull_request(
-                #     repo_id='Symato/cc',
-                #     discussion_num=discuss.num,
-                #     repo_type='dataset',
-                # )
+                api.merge_pull_request(
+                    repo_id='Symato/cc',
+                    discussion_num=discuss.num,
+                    repo_type='dataset',
+                )
                 discord_user, processed_file = discuss.title.split(" submit ")
                 if not discuss.author in hf_authors:
                     hf_authors[discuss.author] = {}
