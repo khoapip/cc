@@ -1,7 +1,7 @@
 name: Auto Merge
 on:
   schedule:
-    - cron: '*/30 * * * *' # runs every 30 minutes
+    - cron: '*/15 * * * *' # runs every 30 minutes
 
 jobs:
  build:
@@ -14,6 +14,6 @@ jobs:
        with:
          python-version: 3.8
      - name: Install dependencies
-       run: pip install huggingface_hub
+       run: pip install huggingface_hub discord_webhook
      - name: Run Python script
-       run: python pr-manager.py --token ${{ secrets.HF_TOKEN }} --repo_id Symato/cc --author binhvq tiendung nampdn-ai
+       run: python pr-manager.py --token ${{ secrets.HF_TOKEN }} --repo_id Symato/cc --discord_webhook ${{ secrets.DISCORD_WEBHOOK }}
