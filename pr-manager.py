@@ -44,7 +44,7 @@ if __name__ == '__main__':
     print(f"Merging {len(pr_list)} PR...")
     for discuss in pr_list:
         try:
-            if discuss.author in count_by_authors and count_by_authors[discuss.author] >= 5: # Github Actions might timeout, limit per user
+            if discuss.author in count_by_authors and count_by_authors[discuss.author] >= 20: # Github Actions might timeout, limit per user
                 continue
             else:
                 api.merge_pull_request(
