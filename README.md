@@ -43,6 +43,9 @@ MEM=8Gb
 You will need to enter Huggingface Token, find it at https://huggingface.co/settings/tokens
 
 This will start the SYMATO CC crowd computing process on your local machine. You can now contribute to the preprocessing of Vietnamese Common Crawl data.
+## Update Configuration
+
+If you've had a change of heart and wish to modify your contribution options, such as the number of CPUs, you can make edits to the configuration file located at: $HOME/.config/symato/bacalhau.conf using the vim text editor.
 
 ## Gathered data
 [HuggingFace datasets/Symato/cc](https://huggingface.co/datasets/Symato/cc/viewer/Symato--cc)
