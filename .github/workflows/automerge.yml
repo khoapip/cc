@@ -1,0 +1,19 @@
+name: Auto Merge
+on:
+  schedule:
+    - cron: '*/30 * * * *' # runs every 30 minutes
+
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Checkout repository content
+       uses: actions/checkout@v2
+     - name: Setup Python
+       uses: actions/setup-python@v2
+       with:
+         python-version: 3.8
+     - name: Install dependencies
+       run: pip install huggingface_hub
+     - name: Run Python script
+       run: python pr-manager.py --token ${{ secrets.HF_TOKEN }} --repo_id Symato/cc --author binhvq tiendung nampdn-ai
