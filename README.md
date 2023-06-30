@@ -20,8 +20,7 @@ The script requires sudo permission to install the following tools:
 
 - Bacalhau Binary: This tool is used for distributed jobs.
 - Docker: This tool provides an isolated execution environment.
-- AWS CLI: This tool is required for quick access to the CommonCrawl data via the S3 protocol, as required by Bacalhau.
-- `jq` and `unzip`: To unzip AWS and extract response from remote server.
+- `jq`: To extract response from remote server.
 
 ## Start Serving
 Once you have installed the symato-contribute script and its dependencies, you can start serving and contributing to the project by running the following command in your terminal:
@@ -46,6 +45,6 @@ You will need to enter Huggingface Token, find it at https://huggingface.co/sett
 This will start the SYMATO CC crowd computing process on your local machine. You can now contribute to the preprocessing of Vietnamese Common Crawl data.
 
 ## Gathered data
-huggingface.co/datasets/Symato/cc/viewer/Symato--cc
+[HuggingFace datasets/Symato/cc](https://huggingface.co/datasets/Symato/cc/viewer/Symato--cc)
 
 Thank you for joining and contributing to SYMATO CC!
