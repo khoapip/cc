@@ -30,7 +30,7 @@ if __name__ == '__main__':
     api = HfApi(token=args.token)
 
     pr_list = []
-
+    count_by_authors = {}
     print("Loading PR...")
     for discuss in api.get_repo_discussions(repo_id=args.repo_id, repo_type='dataset'):
         if not (discuss.is_pull_request and discuss.status == 'open'):
@@ -38,13 +38,14 @@ if __name__ == '__main__':
         if discuss.author not in authors:
             continue
         pr_list.append(discuss)
+        count_by_authors[discuss.author] = 0
 
     hf_authors = {}
-    count_by_authors = {}
+    
     print(f"Merging {len(pr_list)} PR...")
     for discuss in pr_list:
         try:
-            if discuss.author in count_by_authors and count_by_authors[discuss.author] >= 20: # Github Actions might timeout, limit per user
+            if count_by_authors[discuss.author] >= 20: # Github Actions might timeout, n limit per user
                 continue
             else:
                 api.merge_pull_request(
@@ -55,7 +56,6 @@ if __name__ == '__main__':
                 discord_user, processed_file = discuss.title.split(" submit ")
                 if not discuss.author in hf_authors:
                     hf_authors[discuss.author] = {}
-                    count_by_authors[discuss.author] = 0
                 
                 if not discord_user in hf_authors[discuss.author]:
                     hf_authors[discuss.author][discord_user] = []
